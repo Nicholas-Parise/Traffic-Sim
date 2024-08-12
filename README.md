@@ -57,7 +57,6 @@ parts. It will use data from the map and vehicle classes to do this.</p>
 <p>On load you will be provided with a prompt of some kind for
 instance:</p>
 <div class="spacing">
-<p><span>0.8</span></p>
 <pre><code>You&#39;ve reached an intersection, which direction would you like to go?
 You can go: RIGHT(R) but the light is red Or WAIT(W)
 R
@@ -72,7 +71,6 @@ go on a red light, and then the dice are rolled. In this case we won the
 dice roll and our action was successful, we then get a confirmation that
 we change direction.</p>
 <div class="spacing">
-<p><span>0.8</span></p>
 <pre><code>would you like to look at your surroundings? or change lanes? (S or C)
 S
 there is a car in front of you
@@ -85,7 +83,6 @@ your right is empty
 this case we decided to enter "S" to see our surroundings. We are then
 given information about the vehicles around us.</p>
 <div class="spacing">
-<p><span>0.8</span></p>
 <pre><code>would you like to look at your surroundings? or change lanes? (S or C)
 C
 There is no left lane
@@ -107,7 +104,6 @@ we chose to press R instead, here we see that there is already a vehicle
 to our right, and we are asked if we want to go anyway, we roll the dice
 and in this case we lost and damaged our car.</p>
 <div class="spacing">
-<p><span>0.8</span></p>
 <pre><code>Vehicle: 2 collided with vehicle: 7. Vehicle 7 lost reputation</code></pre>
 </div>
 <p>As the simulation continues text like the one above show up from time
