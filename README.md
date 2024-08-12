@@ -1,82 +1,84 @@
-# Traffic-Sim
-A java based traffic simulator 
+\section{Design Overview}
 
-1 DESIGN OVERVIEW
-The general overview is that with each loop of the engine, it calls the thread pool to run
-methods in change of all aspects of the vehicles in parallel. Then at predetermined intervals
-the engine unlocks the ability for the player objects to communicate with the user. These
-player objects are being controlled in their own thread that deals with communication and
-authenticating the user in the database.
-1.1 Threading
-There are several instances of threading in this program. a thread is used to handle the
-server Socket, and each client that connects, and a thread pool is used to move the vehicles.
-Every loop of the update method in the game engine calls a method called "RunThreadPool"
-that creates a thread pool, adds all the runnable tasks to the pool and then blocks the
-game engine thread until all the tasks are done. To make this possible all methods that were
-previously used to update the vehicle position were changed into Runnables.
-1.2 Server
-The server package handles the communication with the game engine to the players. It
-consists of two classes and one enum. The execution starts with engine who spawns a thread
-of "ThreadedServer". This class is in an infinite loop waiting for new connections, and when
-a new connection is found it adds a new user to the players array, spanws a new thread of
-"ConnectionThread" and passes this player to the constructor. ConnectionThread is where all
-the actual communication takes place. The class starts in "Authenticate" mode and prompts
-the user for the username and password, if the supplied credentials are found in the database
-then the player is authenticated and the mode is switched. The server then (depending if it
-is unlocked) data is sent to the user.
-1.3 Client
-The client is a very simple package, it consists of an enum, a helper class and the comms
-class which houses the brains. When the comms class is loaded, it takes in the message from
-the server and using the helper class gets the state and the data in the message.
-the class uses a switch case for the state and depending on which state it is does the
-corrisponding action:
-Push: print the message to the user
-Reply: print the message and take in input
-Authenticate: it sends the credentials to the server
-Kill: print out message and close connection
-Author’s address: Nicholas Parise, Brock University, 1812 Sir Isaac Brock Way, St. Catharines, ON, L2S
-3A1, Canada.
-Update date: 6 April 2024
-:2 Nicholas Parise
-1.4 Communication
-The server communicates to the client through text in a formatted string as follows. On the
-client side, a simple helper class is used to decode the message
-[Data]\t[State]
-The client simply replies back with a string that follows this format, as the server already
-knows what state it is in.
-[Data]
-1.5 Database
-The database is SQLite based. There is a class called "Database" that handles the communication
-with the database. The jar is from this GitHub: https://github.com/xerial/sqlite-jdbc
-and the code is based off the docs aswell.
-The table is simple just has a few column
-"CREATE TABLE IF NOT EXISTS users (\n"
-+ " id integer PRIMARY KEY,\n"
-+ " username text NOT NULL,\n"
-+ " password text NOT NULL\n"
-+ ");";
-1.6 Using the software
-There are two seperate programs
-(1) Server
-(2) Client
-Server must be started first, then clients can be started. In the directory there are several
-shell scripts to start each but they are also listed below:
-To run the Server
-Windwows:
-java -classpath ".;sqlite-jdbc-3.45.2.0.jar;slf4j-api-1.7.36.jar;build"
-Main.Main
-Linux:
-java -classpath ".:sqlite-jdbc-3.45.2.0.jar:slf4j-api-1.7.36.jar:build"
-Main.Main
-To run the Client
-java -cp build Client.Main
-After opening the client after the server you will be met with a success message and then
-the first prompt from the server. In this example our vehicle has reached an intersection and
-we went forward
-Connection accepted!
-Authenticated
+    The design centres around a directed graph of intersections and roads, these intersections have signals and different directions for a vehicle to take. The vehicles drive along these roads 
+
+\subsection{Game}
+    The game engine is where everything comes together. Here we have the main game loop called "update()" this method runs all the other methods in this class. In this class we instantiate all the objects, we create an array of vehicles, the player and load the map.
+Every loop, the main update method, moves all the vehicles, changes the speed accordingly for every vehicle, adds the vehicles to an intersection queue if they reach one, remove the vehicles from the queue accordingly, set up random lane changes for the vehicles, and test collisions. On timers we have the light updates as we don't want to change the lights every time step. The player is also prompted every 3 time steps as well.
+
+    The Vehicle controller class is also another important class, it contains a lot of important helper methods that are used in player and the engine classes. It contains a mixture of random methods for the AI, along with helper methods like "canMoveThrough" which determines if a vehicle can go through an intersection or "laneClear" which determines if a position on a road and lane is clear, this method is used a lot in determining the vehicles speed (to not crash into).
+
+
+\subsection{Map}
+    The Map package contains the Map class and a few other helper classes.
+    The map class contains an array of nodes (intersections), an array of roads, the 2d intersection queue and a 2d array List of vehicle locations.
+    The intersection queue is used to hold the vehicles that reach the intersection, this array is indexed by the intersection id,
+    The location Arraylist is used to make search time a lot faster by keeping track of which vehicles are in each road, this array is based on roads.
+    One of the most important parts of the map class is the file input system, this creates the directed graph from a file. The graph is saved in a file called "DirectedGraph.tab" and by the name suggests is in a tab format, it's simple and allows for quick editing.
+This class also has a lot of different useful helper methods, there are a few private helper methods for the file input system and several public methods that return directions and interact with the location Arraylist.
+
+
+\subsection{Vehicle}
+    The vehicle package contains the class vehicle along with some child classes and an enum. 
+    The vehicle class is abstract, and is inherited by Car, Bus, and Truck.
+    The vehicle class contains a lot of variables and keeps track of a lot of things that have to do with the vehicles. The vehicle class is mostly setters and getters, but it does have a collision method.
+
+\subsection{Player}
+The player class is an extensive class that deals with all user I/O. It starts with the prompt method that determines what kind of prompt to give the player, it then goes to "surroundings", "changeLanes" or "chooseDirection" depending on what the user wants to do. This method also contains the "gamble" method that will do damage and lower reputation depending if an action was successful.
+
+\subsection{Gui}
+This package and class will render an image to the screen in future parts. It will use data from the map and vehicle classes to do this. 
+
+\subsection{Using the software}
+On load you will be provided with a prompt of some kind for instance:
+
+\begin{spacing}{0.8}
+\begin{lstlisting}
 You've reached an intersection, which direction would you like to go?
-You can go: FORWARD(F) RIGHT(R) Or WAIT(W)
-F
+You can go: RIGHT(R) but the light is red Or WAIT(W)
+R
+Are you sure? The light is red (Y/N): Y
+you won the gamble, your action was successful
 Changed direction
-playing the game is easy simply supply the characters the system requests.
+\end{lstlisting}
+\end{spacing} 
+you can  enter R to go right or W to wait, waiting is only useful if the light is red. Going on a red light can sometimes be legal but it can still be dangerous. The user is prompted if they are sure they want to go on a red light, and then the dice are rolled. In this case we won the dice roll and our action was successful, we then get a confirmation that we change direction. 
+\break
+\begin{spacing}{0.8}
+\begin{lstlisting}
+would you like to look at your surroundings? or change lanes? (S or C)
+S
+there is a car in front of you
+there is a vehicle behind you
+There is no left lane
+your right is empty
+
+\end{lstlisting}
+\end{spacing} 
+Here we are prompted to look at our surroundings or change lanes. In this case we decided to enter "S" to see our surroundings. We are then given information about the vehicles around us.
+\break
+\begin{spacing}{0.8}
+\begin{lstlisting}
+would you like to look at your surroundings? or change lanes? (S or C)
+C
+There is no left lane
+Which lane would you like to switch to? (L or R)
+L
+There is no left lane to switch to
+
+R
+there is a vehicle to your right, would you like to go anyway? (Y or N)
+Y
+you lost the gamble and damaged your car
+Lane changed
+\end{lstlisting}
+\end{spacing} 
+Here we are prompted to look at our surroundings or change lanes again. In this case we decided to enter "C" to change lanes. Here we are told we cannot go left as the lane doesn't exist. If we still try to go to the non existent lane was are told there is no lane to switch to. If we chose to press R instead, here we see that there is already a vehicle to our right, and we are asked if we want to go anyway, we roll the dice and in this case we lost and damaged our car.
+\break
+
+\begin{spacing}{0.8}
+\begin{lstlisting}
+Vehicle: 2 collided with vehicle: 7. Vehicle 7 lost reputation
+\end{lstlisting}
+\end{spacing} 
+As the simulation continues text like the one above show up from time to time. This shows us that vehicle 2 and 7 unfortunately crashed into each other and that Vehicle 7 was determined by the dice to be the one at fault. 
