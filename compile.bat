@@ -1,0 +1,1 @@
+javac -d build src/Client/* src/Game/* src/Main/* src/Map/* src/Player/* src/Server/* src/Vehicles/*

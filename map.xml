@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+<map
+        xsi:schemaLocation="map.xsd"
+        xmlns:xsi="http://www.w3.org/1999/xhtml">
+
+    <intersection id="0">
+        <road roadId="0">
+            <destination>1</destination>
+            <direction>Left</direction>
+            <state>Green</state>
+            <length>50</length>
+            <lanes>2</lanes>
+        </road>
+        <road roadId="1">
+            <destination>2</destination>
+            <direction>Forward</direction>
+            <state>Red</state>
+            <length>30</length>
+            <lanes>2</lanes>
+        </road>
+        <road roadId="2">
+            <destination>3</destination>
+            <direction>Right</direction>
+            <state>Green</state>
+            <length>80</length>
+            <lanes>2</lanes>
+        </road>
+    </intersection>
+
+    <intersection id="1">
+        <road roadId="3">
+            <destination>2</destination>
+            <direction>Forward</direction>
+            <state>Green</state>
+            <length>20</length>
+            <lanes>1</lanes>
+        </road>
+    </intersection>
+
+    <intersection id="2">
+        <road roadId="4">
+            <destination>3</destination>
+            <direction>Left</direction>
+            <state>Green</state>
+            <length>20</length>
+            <lanes>1</lanes>
+        </road>
+    </intersection>
+
+    <intersection id="3">
+        <road roadId="5">
+            <destination>4</destination>
+            <direction>Right</direction>
+            <state>Green</state>
+            <length>20</length>
+            <lanes>1</lanes>
+        </road>
+    </intersection>
+
+    <intersection id="4">
+        <road roadId="6">
+            <destination>0</destination>
+            <direction>Forward</direction>
+            <state>Stop</state>
+            <length>100</length>
+            <lanes>1</lanes>
+        </road>
+	<road roadId="7">
+            <destination>5</destination>
+            <direction>Right</direction>
+            <state>Stop</state>
+            <length>100</length>
+            <lanes>1</lanes>
+        </road>
+    </intersection>
+ <intersection id="5">
+        <road roadId="8">
+            <destination>2</destination>
+            <direction>Forward</direction>
+            <state>Stop</state>
+            <length>100</length>
+            <lanes>1</lanes>
+        </road>
+    </intersection>
+
+</map>

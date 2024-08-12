@@ -1,0 +1,1 @@
+java -classpath ".:sqlite-jdbc-3.45.2.0.jar:slf4j-api-1.7.36.jar:build" Main.Main
